@@ -1,21 +1,20 @@
-const mongoose = require('mongoose');
+const { Validator } = require('node-input-validator');
 
-const Email = mongoose.model(
-    'email',
-    {
-        from: String,
-        to: String,
-        subject: String,
-        content: String
-    },
-    'emails'
-);
+const validate = async (mailData) => {
+    const v = new Validator(mailData, {
+        from: 'required|email',
+        to: 'required|email',
+        subject: 'required|string',
+        html: 'required|string'
+    });
 
-const create = async(data) => {
-    let e = new Email(data);
-    return e.save();
+    let matched = await v.check();
+    if(!matched) {
+        return v;
+    }
+    return null;
 };
 
 module.exports = {
-    create
+    validate
 };

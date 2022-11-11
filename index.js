@@ -1,14 +1,12 @@
 const express = require('express');
 const emails = require('./handlers/emails');
-const db = require('./pkg/db');
 require('dotenv').config();
 
 const api = express();
-db.init();
 
 api.use(express.json());
 
-api.post('/api/v1/mailer', emails.create, emails.validate);
+api.post('/api/v1/mailer', emails.send);
 
 api.listen(process.env.PORT, err => {
     if(err) {
